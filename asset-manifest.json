@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/PetCubeEmulator/static/js/main.b8907703.js",
+    "main.js": "/PetCubeEmulator/static/js/main.f2daea31.js",
     "index.html": "/PetCubeEmulator/index.html",
-    "main.b8907703.js.map": "/PetCubeEmulator/static/js/main.b8907703.js.map"
+    "main.f2daea31.js.map": "/PetCubeEmulator/static/js/main.f2daea31.js.map"
   },
   "entrypoints": [
-    "static/js/main.b8907703.js"
+    "static/js/main.f2daea31.js"
   ]
 }
