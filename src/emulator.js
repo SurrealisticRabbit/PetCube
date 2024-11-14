@@ -10,6 +10,8 @@ function col(d) {
 
 const Emulator = (props) => {
   const canvasRef = useRef(null);
+  var doggoDirection = true;
+  var doggoMove = 150;
   var isRed = true;
 
   useEffect(() => {
@@ -52,7 +54,19 @@ const Emulator = (props) => {
 
         const doggo = () => {
             context.fillStyle = 'brown';
-            context.fillRect(100, 170, 20, 20);
+            context.fillRect(doggoMove, 170, 20, 20);
+
+            if (doggoMove >= 180) {
+                doggoDirection = !doggoDirection;
+            } else if (doggoMove <= 20) {
+                doggoDirection = !doggoDirection;
+            }
+
+            if (doggoDirection) {
+            doggoMove += 1;
+        }else{
+            doggoMove -= 1;
+        }
         };
 
         background();
@@ -61,7 +75,7 @@ const Emulator = (props) => {
 
     updateCanvas();
 
-    const intervalId = setInterval(updateCanvas, 500);
+    const intervalId = setInterval(updateCanvas, 100);
     return () => clearInterval(intervalId);
   }, []);
 
