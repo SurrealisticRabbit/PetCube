@@ -44,6 +44,9 @@ root.render(
       <Card variant="outlined">
         <Emulator height={200} width={200}></Emulator>
       </Card>
+      <Typography variant="body">
+        Javascript fucking sucks, never do it  
+              </Typography>
     </Card>
   </ThemeProvider>
 );

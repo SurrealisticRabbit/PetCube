@@ -50,30 +50,18 @@ const Emulator = (props) => {
             context.fillRect(156, 70, 13, 10); 
         };
 
-        background();
-    }
+        const doggo = () => {
+            context.fillStyle = 'brown';
+            context.fillRect(100, 170, 20, 20);
+        };
 
-    function holdingScreen(init){
-        var wob = init;
-        for (let x = 0; x < props.width; x++) {
-            wob = !wob;
-            for (let y = 0; y < props.height; y++) {
-                var colour = '';
-                if (wob) {
-                    colour = 'white';
-                } else {
-                    colour = 'black';
-                }
-                context.fillStyle = colour;
-                wob = !wob;
-                context.fillRect(x*4, y*4, 4, 4);
-            }
-        }
+        background();
+        doggo();
     }
 
     updateCanvas();
 
-    const intervalId = setInterval(updateCanvas, 100);
+    const intervalId = setInterval(updateCanvas, 500);
     return () => clearInterval(intervalId);
   }, []);
 
