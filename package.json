@@ -1,7 +1,7 @@
 {
   "name": "pet-cube",
   "version": "0.1.0",
-  "homepage": "https://surrealisticrabbit.github.io/PetCube",
+  "homepage": "https://surrealisticrabbit.github.io/PetCubeEmulator",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.3",

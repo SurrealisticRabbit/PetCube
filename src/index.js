@@ -5,6 +5,7 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
+import Emulator from "./emulator";
 
 const darkTheme = createTheme({
   palette: {
@@ -34,11 +35,15 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ThemeProvider theme={darkTheme}>
-    <Typography variant="h2">PetCube Emulator</Typography>
-    <CssBaseline enableColorScheme />
-    <Card variant="outlined">
-      <h2>Test</h2>
-      <canvas id="myCanvas" width="200" height="100"></canvas>
+    <Card>
+      <Typography variant="h4">PetCube Emulator</Typography>
+      <Typography variant="body">
+        This is an Emulator / Test platform for PetCube
+      </Typography>
+      <CssBaseline enableColorScheme />
+      <Card variant="outlined">
+        <Emulator height={200} width={200}></Emulator>
+      </Card>
     </Card>
   </ThemeProvider>
 );
