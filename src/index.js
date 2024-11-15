@@ -5,7 +5,7 @@ import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Typography from "@mui/material/Typography";
-import Emulator from "./emulator";
+import Emulator from "./Emulator";
 
 const darkTheme = createTheme({
   palette: {
@@ -48,10 +48,31 @@ root.render(
         Current Functionality
       </Typography>
       <Typography variant="body">
-        Basic render system that draws objects from coords and displays them with relative coords.
+        Pet.js and Environment.js are responsible for running physics, interactions
+        and calculating positions, Render.js is responsible for rendering
+        items passed to it via Pet.js & Environment.js.
+      </Typography>
+      <Typography variant="body">
+        Pet.js and Environment.js also lay out a easy framework to add further Functionality
+        each with a physics and render hook. (With Pet.js having its render function executing within Environment.js render function)
+      </Typography>
+      <Typography variant="body">
+        Pixel art can currently be rendered with scale, but must be saved in .json format
       </Typography>
       <Typography variant="h5">
         To Do
+      </Typography>
+      <Typography variant="body">
+        Add basic pet stats, logic & intelligence.
+      </Typography>
+      <Typography variant="body">
+        Add objects (such as sofa & food bowl)
+      </Typography>
+      <Typography variant="body">
+        Add animation support & pet interaction with objects
+      </Typography>
+      <Typography variant="body">
+        Add PNG to JSON converter
       </Typography>
     </Card>
   </ThemeProvider>

@@ -3,7 +3,7 @@ import Environment from "./petcube/Environment";
 
 const Emulator = (props) => {
   const canvasRef = useRef(null);
-  const environment = new Environment(props);
+  const environment = React.useMemo(() => new Environment(props), [props]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,9 +16,11 @@ const Emulator = (props) => {
 
     const intervalId = setInterval(updateCanvas, 1000 / 60);
     return () => clearInterval(intervalId);
-  }, [props.width, props.height]);
+  }, [props.width, props.height, environment]);
 
-  return <canvas ref={canvasRef} width={props.width} height={props.height} />;
+  return (
+      <canvas ref={canvasRef} width={props.width} height={props.height} />
+  );
 };
 
 export default Emulator;
