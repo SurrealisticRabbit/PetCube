@@ -1,10 +1,10 @@
 import { drawElement } from "./Render";
+import Pet from './Pet';
 
 class Environment {
   constructor(props) {
     this.props = props;
-    this.doggoDirection = true;
-    this.doggoMove = 150;
+    this.doggo = new Pet('Doggo', 'brown', { x: 50, y: 170 }, { min: 20, max: 150 });
     this.environmentBackground = [
       {
         // Floor and walls
@@ -70,30 +70,26 @@ class Environment {
     const currentTime = new Date();
     const currentHours = currentTime.getHours();
     const currentMinutes = currentTime.getMinutes();
+
+    // Update the window color based on the time of day
     this.updateWindowColor(currentTime, currentHours, currentMinutes);
+
+    // Run physics for the pet
+    this.doggo.runPhysics();
     
-
-
-    if (this.doggoMove >= 180 || this.doggoMove <= 20) {
-      this.doggoDirection = !this.doggoDirection;
-    }
-
-    this.doggoMove += this.doggoDirection ? 1 : -1;
   }
 
   render(context) {
     //Render Function
+
+    // Render the background elements
     this.environmentBackground.forEach(({ baseX, baseY, elements }) => {
       drawElement(context, baseX, baseY, elements);
     });
 
-    const doggoBasePosition = { x: 0, y: 0 };
-    const dog = [
-        [this.doggoMove, 170, 20, 20, "brown"],
-        [this.doggoDirection ? this.doggoMove + 10 : this.doggoMove - 10, 165, 20, 10, "brown"],
-        [this.doggoDirection ? this.doggoMove - 10 : this.doggoMove + 10, 180, 20, 5, "brown"],
-    ];
-    drawElement(context, doggoBasePosition.x, doggoBasePosition.y, dog);
+    // Render the pet
+    this.doggo.render(context);
+
   }
 }
 
