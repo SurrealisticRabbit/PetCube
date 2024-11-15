@@ -1,81 +1,141 @@
 import React, { useRef, useEffect } from "react";
 
-function col(d) {
-  if (d) {
-    return "red";
-  } else {
-    return "blue";
-  }
-}
 
 const Emulator = (props) => {
   const canvasRef = useRef(null);
   var doggoDirection = true;
   var doggoMove = 150;
-  var isRed = true;
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas.getContext("2d");
 
     const updateCanvas = () => {
-        runPetCube();
+      runPetCube();
     };
 
-    function runPetCube(){
-        const background = () => {
+    function drawBox(x, y, l, w, colour) {
+      context.fillStyle = colour;
+      context.fillRect(x, y, l, w);
+  }
+  
+  function drawElement(baseX, baseY, elements) {
+      elements.forEach(([x, y, l, w, colour]) => {
+          drawBox(baseX + x, baseY + y, l, w, colour);
+      });
+  }
+  
+function runPetCube() {
+  function getWindowColor() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const totalMinutes = hours * 60 + minutes;
 
-            //Floor & Walls
-            context.fillStyle = '#bec3c4';
-            context.fillRect(0, 180, props.width, 20);
-            context.fillStyle = '#fce695';
-            context.fillRect(0, 0, props.width, 180);
+    const blend = (start, end, percentage) => {
+        return Math.round(start + (end - start) * percentage);
+    };
 
-            //Window
-            context.fillStyle = '#b0ebff';
-            context.fillRect(40, 40, 40, 40);
-            context.fillStyle = 'grey';
-            context.fillRect(40, 40, 5, 40);
-            context.fillRect(60, 40, 5, 40);
-            context.fillRect(80, 40, 5, 40);
-            context.fillRect(40, 60, 40, 5);
-            context.fillRect(40, 40, 40, 5);
-            context.fillRect(40, 80, 45, 5);
+    const dayColor = { r: 176, g: 235, b: 255 }; // Light blue
+    const nightColor = { r: 44, g: 62, b: 80 }; // Dark blue
 
-            //Lamp (So it doesn't look so empty)
-            context.fillStyle = 'grey';
-            context.fillRect(150, 175, 25, 5);
-            context.fillRect(160, 100, 5, 80);
-            context.fillStyle = '#d9b1e3';
-            context.fillRect(150, 90, 25, 10);
-            context.fillRect(153, 80, 19, 10); 
-            context.fillRect(156, 70, 13, 10); 
-        };
-
-        const doggo = () => {
-            context.fillStyle = 'brown';
-            context.fillRect(doggoMove, 170, 20, 20);
-
-            if (doggoMove >= 180) {
-                doggoDirection = !doggoDirection;
-            } else if (doggoMove <= 20) {
-                doggoDirection = !doggoDirection;
-            }
-
-            if (doggoDirection) {
-            doggoMove += 1;
-        }else{
-            doggoMove -= 1;
-        }
-        };
-
-        background();
-        doggo();
+    let percentage;
+    if (totalMinutes >= 360 && totalMinutes < 720) {
+        // Morning: 6 AM to 12 PM
+        percentage = (totalMinutes - 360) / 360;
+    } else if (totalMinutes >= 720 && totalMinutes < 1080) {
+        // Afternoon: 12 PM to 6 PM
+        percentage = (totalMinutes - 720) / 360;
+    } else if (totalMinutes >= 1080 && totalMinutes < 1440) {
+        // Evening: 6 PM to 12 AM
+        percentage = (totalMinutes - 1080) / 360;
+    } else {
+        // Night: 12 AM to 6 AM
+        percentage = totalMinutes / 360;
     }
+
+    // Adjust percentage for smooth transition
+    if (totalMinutes < 360) {
+        // Early morning: 12 AM to 6 AM
+        percentage = totalMinutes / 360;
+    } else if (totalMinutes >= 1080) {
+        // Evening to midnight: 6 PM to 12 AM
+        percentage = (totalMinutes - 1080) / 360;
+    } else if (totalMinutes >= 720) {
+        // Afternoon to evening: 12 PM to 6 PM
+        percentage = (totalMinutes - 720) / 360;
+    } else {
+        // Morning to afternoon: 6 AM to 12 PM
+        percentage = (totalMinutes - 360) / 360;
+    }
+
+    const r = blend(nightColor.r, dayColor.r, percentage);
+    const g = blend(nightColor.g, dayColor.g, percentage);
+    const b = blend(nightColor.b, dayColor.b, percentage);
+
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
+    const floorAndWalls = [
+        [0, 180, props.width, 20, "#bec3c4"],
+        [0, 0, props.width, 180, "#fce695"],
+    ];
+
+    const window = [
+        [0, 0, 40, 40, getWindowColor()],
+        [0, 0, 5, 40, "grey"],
+        [20, 0, 5, 40, "grey"],
+        [40, 0, 5, 40, "grey"],
+        [0, 20, 40, 5, "grey"],
+        [0, 0, 40, 5, "grey"],
+        [0, 40, 45, 5, "grey"],
+    ];
+
+    const lamp = [
+        [0, 105, 25, 5, "grey"],
+        [10, 30, 5, 80, "grey"],
+        [0, 20, 25, 10, "#d9b1e3"],
+        [3, 10, 19, 10, "#d9b1e3"],
+        [6, 0, 13, 10, "#d9b1e3"],
+    ];
+
+    const environmentItems = [
+        { baseX: 0, baseY: 0, elements: floorAndWalls },
+        { baseX: 40, baseY: 40, elements: window },
+        { baseX: 150, baseY: 70, elements: lamp },
+    ];
+
+    const background = () => {
+        environmentItems.forEach(({ baseX, baseY, elements }) => {
+            drawElement(baseX, baseY, elements);
+        });
+    };
+
+    const doggoBasePosition = { x: 0, y: 0 };
+
+    const doggo = () => {
+        const dog = [
+            [doggoMove, 170, 20, 20, "brown"],
+            [doggoDirection ? doggoMove + 10 : doggoMove - 10, 165, 20, 10, "brown"],
+            [doggoDirection ? doggoMove - 10 : doggoMove + 10, 180, 20, 5, "brown"],
+        ];
+
+        drawElement(doggoBasePosition.x, doggoBasePosition.y, dog);
+
+        if (doggoMove >= 180 || doggoMove <= 20) {
+            doggoDirection = !doggoDirection;
+        }
+
+        doggoMove += doggoDirection ? 1 : -1;
+    };
+
+    background();
+    doggo();
+}
 
     updateCanvas();
 
-    const intervalId = setInterval(updateCanvas, 100);
+    const intervalId = setInterval(updateCanvas, 50);
     return () => clearInterval(intervalId);
   }, []);
 
