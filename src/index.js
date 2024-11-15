@@ -44,9 +44,15 @@ root.render(
       <Card variant="outlined">
         <Emulator height={200} width={200}></Emulator>
       </Card>
+      <Typography variant="h5">
+        Current Functionality
+      </Typography>
       <Typography variant="body">
-        Javascript fucking sucks, never do it  
-              </Typography>
+        Basic render system that draws objects from coords and displays them with relative coords.
+      </Typography>
+      <Typography variant="h5">
+        To Do
+      </Typography>
     </Card>
   </ThemeProvider>
 );
